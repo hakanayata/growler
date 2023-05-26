@@ -1,0 +1,125 @@
+#post:focus {
+   box-shadow: none !important;
+}
+
+.post-hr {
+   width: calc(100% - 24px);
+   margin: 0 12px;
+
+}
+
+textarea:focus {
+   box-shadow: none !important;
+}
+
+.avatar {
+   background-color: #e5fee5;
+   text-decoration: none;
+}
+
+.avatar-pp {
+   background-color: #e5fee5;
+   width: 120px;
+   height: 120px;
+}
+
+.avatar:hover {
+   background-color: #f0fff0bb;
+   border-width: 2px !important;
+}
+
+.btnIcon {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   width: 36px;
+   height: 36px;
+   border-radius: 50%;
+   border: none;
+   font-size: 16px;
+   margin: 0;
+   padding: 6px;
+}
+
+.nav-item.dropdown {
+   list-style-type: none;
+}
+
+.reply:hover {
+   background-color: rgba(0, 245, 255, 0.1);
+   /* color: rgba(0, 100, 255, .9) */
+}
+
+.reply-div:hover {
+   color: rgba(0, 100, 255, .9) !important;
+}
+
+.reply-div > a:hover {
+   color: rgba(0, 100, 255, .9) !important;
+}
+
+.like:hover {
+   background-color: rgba(255, 0, 0, 0.08);
+   /* color: rgba(255, 0, 0, 0.9) */
+}
+
+.like-div:hover {
+   color: rgb(247, 14, 119) !important;
+   /* color: #e7ff6dd2; */
+   /* color: #d3ff00; */
+}
+
+.post-div:hover {
+   background-color: #efefef22;
+}
+
+.author-link {
+   font-size: 1.1rem;
+   text-decoration: none;
+   font-weight: 600;
+   color: inherit;
+}
+
+.author-link:hover {
+   text-decoration: underline;
+   text-decoration-thickness: 2px;
+   text-underline-offset: 2px;
+}
+
+.heart-color {
+   color:rgb(247, 14, 119)
+}
+
+.delete {
+   animation: alternate;
+}
+
+@keyframes hide {
+   0% {
+      opacity: 1;
+      height: 100%;
+      line-height: 1.5;
+      padding-top: 16px;
+      margin-left: -12px;
+      margin-right: -12px;
+   }
+
+   75% {
+      opacity: 0;
+      height: 100%;
+      line-height: 1.5;
+      padding-top: 16px;
+      margin-left: -12px;
+      margin-right: -12px;
+   }
+
+   100% {
+      opacity: 0;
+      height: 0;
+      line-height: 0;
+      padding-top: 0;
+      margin-left: -12px;
+      margin-right: -12px;
+   }
+   
+}

@@ -1,0 +1,18 @@
+{% extends 'network/layout.html' %}
+
+{% load humanize %}
+{% load helpers %}
+
+{% block title %}
+  Following
+{% endblock %}
+
+{% block body %}
+  <div class="container shadow-sm" style="max-width: 720px;">
+    {% if user.following.count == 0 %}
+      <p class="mt-3">You do not follow anyone.</p>
+    {% endif %}
+    <hr class="mb-0" />
+    {% include 'network/posts.html' %}
+  </div>
+{% endblock %}

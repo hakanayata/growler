@@ -1,0 +1,23 @@
+{% extends 'network/layout.html' %}
+
+{% load humanize %}
+{% load helpers %}
+
+{% block title %}
+Growler: Social Network
+{% endblock %}
+
+{% block body %}
+  <div class="container shadow-sm" style="max-width: 720px;">
+    <hr />
+    <div>
+      <form action="{% url 'create_post' %}" method="post">
+        {% csrf_token %}
+        <textarea class="form-control border border-0 mb-1" name="post" id="post" cols="30" rows="3" placeholder="What is happening?" maxlength="300" style="resize: none" required></textarea>
+        <input class="btn btn-sm btn-success rounded-pill d-block ms-auto px-4" type="submit" value="Post" />
+      </form>
+    </div>
+    <hr class="mb-0" />
+    {% include 'network/posts.html' %}
+  </div>
+{% endblock %}

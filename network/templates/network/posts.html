@@ -1,0 +1,112 @@
+{% load humanize %}
+{% load helpers %}
+
+<div>
+    {% if not page_posts|length > 0 %}
+      <p class="mt-3 pb-3">No posts to show.</p>
+    {% else %}
+    {% for post in page_posts %}
+      <div class="row pt-3 post-div" id="post-div-{{ post.id }}">
+        <div class="col-2 d-flex justify-content-center display-6 px-0">
+          <a class="avatar border border-success-subtle d-flex align-items-center justify-content-center p-2 rounded-circle text-secondary" href="{% url 'profile' post.author_id %}" style="width: 48px; height: 48px;">{{ post.author | initial }}</a>
+        </div>
+        <div class="col-10">
+          <div class="d-flex justify-content-between align-items-center">
+              <a class="author-link" href="{% url 'profile' post.author_id %}">{{ post.author }}</a> 
+              <input type="hidden" name="canUserEdit" data-can-edit="{% if user.id == post.author_id %}1{% else %}0{% endif %}" id="canEdit-{{post.id}}">
+              <div id="edit-icon-div-{{ post.id }}">
+                {% if post.is_updated %}
+                <span><i class="fa-solid fa-eraser me-1 text-body-tertiary"></i></span>
+                {% endif %}
+                <span class="text-body-tertiary" style="font-size: 14px;">{{ post.date_created | naturaltime }}</span>
+              </div>
+          </div>
+          <!-- CONTENT OF A POST -->
+          <div class="d-flex flex-column" id="parent-{{ post.id }}" >
+            <p class="text-secondary-emphasis my-1" id="content-{{ post.id }}">{{ post.content }}</p>
+          </div>
+          <div class="d-flex justify-content-between mb-1" id="post-stats-{{ post.id }}" >
+            <div class="d-flex align-items-center reply-div">
+                <a class="d-flex align-items-center text-decoration-none text-body" href="{% url 'post_details' post.id %}">
+                    <i class="btnIcon fa-regular fa-comment-dots reply" role="button"></i>
+                    <span style="font-size: 12px;">{{ post.replies.count }}</span>
+                </a>
+            </div>
+            <div class="d-flex align-items-center like-div">
+                <span class="d-flex align-items-center">
+                    <i class="btnIcon like fa-heart {% if post in posts_liked %} fa-solid heart-color {% else %} fa-regular {% endif %}" data-id="{{ post.id }}" id="likeBtn-{{ post.id }}" role="button"></i>
+                    <span style="font-size: 12px;" id="like-count-{{post.id}}">{{ post.liked_by.count }}</span>
+                </span>
+            </div>
+            <div class="d-flex align-items-center">
+              <i class="btnIcon fa-regular fa-eye"></i>
+              <span style="font-size: 12px;">{{ post.view_count }}</span>
+            </div>
+            <!-- todo: EDIT / DEL  -->
+            <nav class="d-flex align-items-center" id="menuBtn-{{ post.id }}" >
+              {% if user.id != post.author_id %}
+              <li class="nav-item dropdown disabled">
+                <a class="nav-link text-body-tertiary disabled" href="javascript:void(0)" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 12px; opacity: .3;">
+                  •••
+                </a>
+              </li>
+              {% else %}
+              <li class="nav-item dropdown">
+                <a class="nav-link" href="javascript:void(0)" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 12px;">
+                  •••
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" data-id={{ post.id }} id="editBtn-{{ post.id }}" href="javascript:void(0)">Edit</a></li>
+                  <li><a class="dropdown-item" data-id={{ post.id }} id="deleteBtn-{{ post.id }}" href="javascript:void(0)">Delete</a></li>
+                </ul>
+              </li>
+              {% endif %}
+            </nav>
+          </div>
+        </div>
+
+        <hr class="post-hr">
+      </div>
+    {% endfor %}
+
+    <!-- IS USER LOGGED IN -->
+    <input type="hidden" name="isAuth" data-is-auth="{% if user.is_authenticated %}1{% else %}0{% endif %}" id="isAuth">
+    <!-- LOGIN LINK -->
+    <input type="hidden" name="login-link" data-loginhref="{% url 'login' %}" id="login-href">
+
+    <!-- PAGINATION -->
+    {% if page_posts.paginator.num_pages > 1 %}
+    <nav class="mb-3 pb-2 pt-4" aria-label="Page navigation">
+      <ul class="pagination pagination-sm-sm justify-content-center">
+        <li class="page-item">
+          <a class="page-link" href="?page=1">&laquo; First</a>
+        </li>
+        {% if page_posts.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_posts.previous_page_number }}">Prev</a>
+        </li>
+        {% else %}
+        <li class="page-item">
+          <a class="page-link disabled" href="?page=1">Prev</a>
+        </li>
+        {% endif %}
+        <li class="page-item border d-flex align-items-center justify-content-center px-4">
+          <small>{{ page_posts.number }} / {{ page_posts.paginator.num_pages }}</small>
+        </li>
+        {% if page_posts.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_posts.next_page_number }}">Next</a>
+        </li>
+        {% else %}
+        <li class="page-item ">
+          <a class="page-link disabled" href="?page={{ page_posts.paginator.num_pages }}">Next</a>
+        </li>
+        {% endif %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_posts.paginator.num_pages }}">Last &raquo;</a>
+        </li>
+      </ul>
+    </nav>
+    {% endif %}
+    {% endif %}
+  </div>

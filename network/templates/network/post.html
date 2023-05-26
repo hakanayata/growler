@@ -1,0 +1,112 @@
+{% extends 'network/layout.html' %}
+
+{% load humanize %}
+{% load helpers %}
+
+{% block body %}
+<div class="container py-2" style="max-width: 720px;">
+    <!-- POST DIV -->
+    <div class="row pt-3 post-div shadow-sm mb-4" id="post-div-{{ post.id }}">
+        <!-- LEFT PART -->
+        <div class="col-2 d-flex justify-content-center display-6 px-0">
+          <a class="avatar border border-success-subtle d-flex align-items-center justify-content-center p-2 rounded-circle text-secondary" href="{% url 'profile' post.author_id %}" style="width: 48px; height: 48px;">{{ post.author | initial }}</a>
+        </div>
+        <!-- RIGHT PART -->
+        <div class="col-10">
+            <!-- 1ST ROW -->
+            <div class="d-flex justify-content-between align-items-center">
+                <a class="author-link" href="{% url 'profile' post.author_id %}">{{ post.author }}</a> 
+                <input type="hidden" name="canUserEdit" data-can-edit="{% if user.id == post.author_id %}1{% else %}0{% endif %}" id="canEdit-{{post.id}}">
+                <div id="edit-icon-div-{{ post.id }}">
+                    {% if post.is_updated %}
+                    <span><i class="fa-solid fa-eraser me-1 text-body-tertiary"></i></span>
+                    <span class="text-body-tertiary" style="font-size: 14px;">Last edit: {{ post.date_updated | naturaltime }}</span>
+                    {% else %}
+                    <span class="text-body-tertiary" style="font-size: 14px;">{{ post.date_created | naturaltime }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- 2ND ROW: CONTENT OF A POST -->
+            <div class="d-flex flex-column" id="parent-{{ post.id }}" >
+                <p class="text-secondary-emphasis my-1" id="content-{{ post.id }}">{{ post.content }}</p>
+            </div>
+            <!-- 3RD ROW: BUTTON ROW -->
+            <div class="d-flex justify-content-between mb-1" id="post-stats-{{ post.id }}" >
+                <div class="d-flex align-items-center reply-div">
+                    <i class="btnIcon fa-regular fa-comment-dots reply" role="button"></i>
+                    <span style="font-size: 12px;">{{ post.replies.count }}</span>
+                </div>
+                <div class="d-flex align-items-center like-div">
+                    <i class="btnIcon like fa-heart {% if post in posts_liked %} fa-solid heart-color {% else %} fa-regular {% endif %}" data-id="{{ post.id }}" id="likeBtn-{{ post.id }}" role="button"></i>
+                    <span style="font-size: 12px;" id="like-count-{{post.id}}">{{ post.liked_by.count }}</span>
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="btnIcon fa-regular fa-eye"></i>
+                    <span style="font-size: 12px;">{{ post.view_count }}</span>
+                </div>
+                <!-- todo: EDIT / DEL  -->
+                <nav class="d-flex align-items-center" id="menuBtn-{{ post.id }}" >
+                <li class="nav-item dropdown">
+                    <a class="nav-link " href="javascript:void(0)" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 12px;">
+                    •••
+                    </a>
+                    <ul class="dropdown-menu">
+                    <li><a class="dropdown-item {% if user.id != post.author_id %} disabled {% endif %}" data-id={{ post.id }} id="editBtn-{{ post.id }}" href="javascript:void(0)">Edit</a></li>
+                    <li><a class="dropdown-item {% if user.id != post.author_id %} disabled {% endif %}" data-id={{ post.id }} id="deleteBtn-{{ post.id }}" href="javascript:void(0)">Delete</a></li>
+                    </ul>
+                </li>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- REPLY DIV -->
+    <div class="row shadow-sm py-2 my-4">
+        <form action="{% url 'reply' post.id %}" method="post">
+            {% csrf_token %}
+            <textarea class="form-control border border-0 mb-1" name="reply" id="post" cols="30" rows="3" placeholder="Your message..." maxlength="300" style="resize: none" required></textarea>
+            <input class="btn btn-sm btn-success rounded-pill d-block ms-auto px-4" type="submit" value="Reply" />
+        </form>
+    </div>
+    <!-- REPLIES -->
+    {% if replies.count > 0 %}
+        {% for reply in replies %}
+        <div class="row shadow-sm py-3 post-div">
+            <div class="col-2 d-flex justify-content-center display-6 px-0">
+                <a class="avatar border border-success-subtle d-flex align-items-center justify-content-center p-2 rounded-circle text-secondary" href="{% url 'profile' reply.author_id %}" style="width: 48px; height: 48px;">{{ reply.author | initial }}</a>
+              </div>
+              <!-- RIGHT PART -->
+              <div class="col-10">
+                  <!-- 1ST ROW -->
+                  <div class="d-flex justify-content-between align-items-center">
+                      <a class="author-link" href="{% url 'profile' reply.author_id %}">{{ reply.author }}</a> 
+                      <div>
+                          <span class="text-body-tertiary" style="font-size: 14px;">{{ reply.date_created | naturaltime }}</span>
+                      </div>
+                  </div>
+                  <!-- 2ND ROW: CONTENT OF A POST -->
+                  <div class="d-flex flex-column">
+                      <p class="text-secondary-emphasis my-1">{{ reply.reply }}</p>
+                  </div>
+              </div>
+              <div class="d-flex justify-content-end mb-1">
+                <!-- DEL  -->
+                    {% if user.id == reply.author_id %}
+                    <form action="{% url 'delete_reply' reply.id %}" method="post">
+                        <button class="btn btn-sm btn-danger py-0 rounded-pill" type="submit">Delete</i></button>
+                    </form>
+                    {% endif %}
+                </nav>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No replies to show.</p>
+    {% endif %}
+
+    <!-- IS USER LOGGED IN -->
+    <input type="hidden" name="isAuth" data-is-auth="{% if user.is_authenticated %}1{% else %}0{% endif %}" id="isAuth">
+    <!-- LOGIN LINK -->
+    <input type="hidden" name="login-link" data-loginhref="{% url 'login' %}" id="login-href">
+
+</div>
+{% endblock %}

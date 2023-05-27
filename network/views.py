@@ -103,8 +103,9 @@ def register(request):
 @require_POST
 def create_post(request):
     content = request.POST["post"]
-    if not content:
-        return
+    if not content or content.strip() == "":
+        messages.info(request, "Must provide content.")
+        return HttpResponseRedirect(reverse("index"))
     else:
         post = Post(content=content, author=request.user)
         post.save()
@@ -302,6 +303,10 @@ def reply(request, id):
     post = Post.objects.get(pk=id)
     try:
         content = request.POST["reply"]
+        if not content or content.strip() == "":
+            messages.info(request, "Must provide content.")
+            return HttpResponseRedirect(reverse("post_details", kwargs={"id": id}))
+
         reply = Reply(author=request.user, reply=content, post=post)
         reply.save()
     except:

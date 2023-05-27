@@ -106,7 +106,7 @@ document.addEventListener("click", (event) => {
                     btnDiv.remove()
                     textArea.remove()
 
-                    if (bio == "" && bioDiv) {
+                    if (bio.trim() === "" && bioDiv) {
                         bioDiv.remove()
                     }
 
@@ -114,7 +114,7 @@ document.addEventListener("click", (event) => {
                         bioDiv.appendChild(bioEl)
                     }
 
-                    if (bio !== "") {
+                    if (bio.trim() !== "") {
                         bioEl.style.display = "block"
                     }
 

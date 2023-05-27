@@ -3,6 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
             const alertDiv = document.querySelector("#alert")
             alertDiv.style.display = "none"
-        }, 1800);
+        }, 2000);
     }
 })

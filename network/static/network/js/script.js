@@ -81,6 +81,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
                     .then(res => {
                         // console.log(res);
+                        if (textArea.value.trim() === "") {
+                            throw new Error("Must provide content!")
+                        }
                         if (!canEdit) {
                             throw new Error("Sorry! You're not authorized for this.")
                         }

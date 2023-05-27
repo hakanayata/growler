@@ -32,14 +32,17 @@ def index(request):
         posts_liked = None
 
     for obj in page_obj:
-        try:
-            obj.view_count += 1
-            # update_fields parameter not necessary, just for better performance
-            obj.save(update_fields=["view_count"])
-        except:
-            return render(request, "network/index.html", {
-                "message": "Oops! Something went wrong"
-            })
+        # todo: implement user-based unique view count
+        if request.user.is_authenticated and request.user not in obj.viewed_by.all():
+            try:
+                obj.view_count += 1
+                obj.viewed_by.add(request.user)
+                # update_fields parameter not necessary, just for better performance
+                obj.save(update_fields=["view_count", "viewed_by"])
+            except:
+                return render(request, "network/index.html", {
+                    "message": "Oops! Something went wrong"
+                })
 
     return render(request, "network/index.html", {
         "page_posts": page_obj,
@@ -127,13 +130,15 @@ def profile_view(request, id):
         posts_liked = None
 
     for obj in page_obj:
-        try:
-            obj.view_count += 1
-            obj.save()
-        except:
-            return render(request, "network/index.html", {
-                "message": "Oops! Something went wrong"
-            })
+        if request.user.is_authenticated and request.user not in obj.viewed_by.all():
+            try:
+                obj.view_count += 1
+                obj.viewed_by.add(request.user)
+                obj.save(update_fields=["view_count", "viewed_by"])
+            except:
+                return render(request, "network/index.html", {
+                    "message": "Oops! Something went wrong"
+                })
 
     return render(request, "network/profile.html", {
         "posts": posts,
@@ -180,13 +185,15 @@ def following(request):
         posts_liked = None
 
     for obj in page_obj:
-        try:
-            obj.view_count += 1
-            obj.save()
-        except:
-            return render(request, "network/index.html", {
-                "message": "Oops! Something went wrong"
-            })
+        if request.user.is_authenticated and request.user not in obj.viewed_by.all():
+            try:
+                obj.view_count += 1
+                obj.viewed_by.add(request.user)
+                obj.save(update_fields=["view_count", "viewed_by"])
+            except:
+                return render(request, "network/index.html", {
+                    "message": "Oops! Something went wrong"
+                })
 
     return render(request, "network/following.html", {
         "page_posts": page_obj,
@@ -288,6 +295,15 @@ def post_details(request, id):
         posts_liked = request.user.likes.all()
     except:
         posts_liked = None
+
+    if request.user.is_authenticated and request.user not in post.viewed_by.all():
+        try:
+            post.view_count += 1
+            post.viewed_by.add(request.user)
+            post.save(update_fields=["view_count", "viewed_by"])
+        except:
+            messages.error(request, "Oops! Something went wrong about views.")
+            return HttpResponseRedirect(reverse("post_details", kwargs={"id": id}))
 
     replies = Reply.objects.filter(post_id=id)
     return render(request, "network/post.html", {

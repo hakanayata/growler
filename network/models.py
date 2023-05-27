@@ -16,6 +16,7 @@ class Post(models.Model):
     is_updated = models.BooleanField(default=False)
     liked_by = models.ManyToManyField(User, blank=True, related_name="likes")
     view_count = models.PositiveBigIntegerField(default=0, editable=False)
+    viewed_by = models.ManyToManyField(User, blank=True, related_name="views")
 
     class Meta:
         ordering = ["-date_created"]

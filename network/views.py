@@ -32,18 +32,18 @@ def index(request):
         posts_liked = None
 
     for obj in page_obj:
-        # todo: implement user-based unique view count
+        # user-based unique views count
         if request.user.is_authenticated and request.user not in obj.viewed_by.all():
             try:
                 obj.view_count += 1
                 obj.viewed_by.add(request.user)
-                # update_fields parameter not necessary, just for better performance
-                obj.save(update_fields=["view_count", "viewed_by"])
+                obj.save()
             except:
                 return render(request, "network/index.html", {
                     "message": "Oops! Something went wrong"
                 })
 
+    # ! after posting, user ends up seeing empty page !
     return render(request, "network/index.html", {
         "page_posts": page_obj,
         "posts_liked": posts_liked
@@ -134,7 +134,7 @@ def profile_view(request, id):
             try:
                 obj.view_count += 1
                 obj.viewed_by.add(request.user)
-                obj.save(update_fields=["view_count", "viewed_by"])
+                obj.save()
             except:
                 return render(request, "network/index.html", {
                     "message": "Oops! Something went wrong"
@@ -189,7 +189,7 @@ def following(request):
             try:
                 obj.view_count += 1
                 obj.viewed_by.add(request.user)
-                obj.save(update_fields=["view_count", "viewed_by"])
+                obj.save()
             except:
                 return render(request, "network/index.html", {
                     "message": "Oops! Something went wrong"
@@ -300,7 +300,7 @@ def post_details(request, id):
         try:
             post.view_count += 1
             post.viewed_by.add(request.user)
-            post.save(update_fields=["view_count", "viewed_by"])
+            post.save()
         except:
             messages.error(request, "Oops! Something went wrong about views.")
             return HttpResponseRedirect(reverse("post_details", kwargs={"id": id}))

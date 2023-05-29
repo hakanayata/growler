@@ -40,7 +40,8 @@ This project was developed based on the following [specification](https://cs50.h
 - Bio: Users can add descriptive, interesting information about them, and this can be modified on their profile pages.
 - Reply: Users can reply to any post.
 - Light/Dark Mode: Users have an option to switch between two different themes.
-  
+- Views Count: Each post shows views count which updates everytime a new authenticated user loads it.
+
 ## Languages & Tools
 
 - Python

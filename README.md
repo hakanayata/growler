@@ -35,8 +35,6 @@ This project was developed based on the following [specification](https://cs50.h
 - **"Like" and "Unlike"**: Users should be able to click a button or link on any post to toggle whether or not they “like” that post.
   - Using JavaScript, you should asynchronously let the server know to update the like count (as via a call to fetch) and then update the post’s like count displayed on the page, without requiring a reload of the entire page.
 
-<br>
-
 ## Extra Features
 - Delete Post: Users have the ability to delete posts, and what adds to the experience is the smooth animation that accompanies the deletion process.
 - Bio: Users can add descriptive, interesting information about them, and this can be modified on their profile pages.
@@ -55,8 +53,6 @@ This project was developed based on the following [specification](https://cs50.h
 - Python Anywhere
 - SQLite3
 - Visual Studio Code (with a vim extension)
-
-<br>
 
 ## Credits
 - `login`, `logout`, `register` view functions utilized in this project were prepared by Harvard's CS50W staff.
